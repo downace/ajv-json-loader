@@ -5,6 +5,9 @@
   "engines": {
     "node": ">=6.4.0"
   },
+  "files": [
+    "index.js"
+  ],
   "main": "index.js",
   "repository": {
     "type": "git",
