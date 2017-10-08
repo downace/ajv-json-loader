@@ -1,6 +1,6 @@
 {
   "name": "ajv-json-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Webpack loader that compiles JSON strings into Ajv validation functions using ajv-pack",
   "engines": {
     "node": ">=6.4.0"
