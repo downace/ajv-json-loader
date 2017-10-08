@@ -1,0 +1,33 @@
+{
+  "name": "ajv-json-loader",
+  "version": "0.1.0",
+  "description": "Webpack loader that compiles JSON strings into Ajv validation functions using ajv-pack",
+  "engines": {
+    "node": ">=6.4.0"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://git@github.com/downace/ajv-json-loader.git"
+  },
+  "keywords": [
+    "ajv",
+    "webpack",
+    "loader",
+    "json",
+    "schema",
+    "validation",
+    "precompile"
+  ],
+  "author": "jbot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/downace/ajv-json-loader/issues"
+  },
+  "homepage": "https://github.com/downace/ajv-json-loader#readme",
+  "dependencies": {
+    "ajv": ">=5.0.0",
+    "loader-utils": ">=1.1.0",
+    "ajv-pack": "^0.3.0"
+  }
+}
