@@ -91,7 +91,7 @@ For example, if you have following schemas in `/path/to/schemas`:
 }
 
 ```
-Loader will call `require(path.resolve('/path/to/schemas'), 'bar.json')` to load `bar.json#` schema
+Loader will call `require(path.resolve('/path/to/schemas', 'bar.json'))` to load `bar.json#` schema
 
 ## TypeScript typings
 
