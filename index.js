@@ -13,7 +13,7 @@ module.exports = function (schemaStr, sourceMap) {
                 const schema = require(filePath);
                 resolve(schema);
             } catch (e) {
-                e.message = `Couldn't load schema ${e.message}`;
+                e.message = `Couldn't load schema: ${e.message}`;
                 reject(e);
             }
         });

@@ -1,0 +1,7 @@
+{
+    "properties": {
+        "key": {
+            "$ref": "referenced.json#/definitions/key"
+        }
+    }
+}

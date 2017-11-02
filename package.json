@@ -34,10 +34,13 @@
   "dependencies": {
     "ajv": ">=5.0.0",
     "loader-utils": ">=1.1.0",
-    "ajv-pack": "^0.3.0"
+    "ajv-pack": "~0.3.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "chai": "~4.1.2",
+    "chai-string": "~1.4.0",
+    "memory-fs": "~0.4.1",
+    "mocha": "~4.0.1",
+    "webpack": "~3.8.1"
   }
 }

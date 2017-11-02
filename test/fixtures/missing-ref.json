@@ -1,0 +1,7 @@
+{
+    "properties": {
+        "key": {
+            "$ref": "missing-schema.json#/definitions/key"
+        }
+    }
+}
