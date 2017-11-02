@@ -1,4 +1,6 @@
 # ajv-json-loader
+[![Build Status](https://travis-ci.org/downace/ajv-json-loader.svg?branch=master)](https://travis-ci.org/downace/ajv-json-loader)
+
 [Webpack loader](https://webpack.js.org/concepts/loaders)
 that compiles JSON strings into
 [Ajv](https://github.com/epoberezkin/ajv) validation functions
