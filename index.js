@@ -22,9 +22,8 @@ module.exports = function (schemaStr, sourceMap) {
     const defaultAjvOptions = { loadSchema };
     // Maybe will be used in future
     const options           = loaderUtils.getOptions(this) || {};
-    const ajvOptions        = options.ajv || {};
     // { sourceCode: true } should not be overridden
-    Object.assign(ajvOptions, defaultAjvOptions, ajvOptions, { sourceCode: true });
+    const ajvOptions        = Object.assign({}, defaultAjvOptions, options.ajv || {}, { sourceCode: true });
 
     const ajv = new Ajv(ajvOptions);
 
