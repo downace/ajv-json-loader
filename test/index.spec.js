@@ -123,7 +123,10 @@ describe('ajv-json-loader', () => {
             const complexSchemaCode = `'use strict';
                 var validate = (function() {
                   var refVal = [];
-                  refVal[1] = 1;
+                  var refVal1 = {
+                    "required": ["prop"]
+                  };
+                  refVal[1] = refVal1;
                   return function validate(data, dataPath, parentData, parentDataProperty, rootData) {
                     'use strict';
                     var vErrors = null;
