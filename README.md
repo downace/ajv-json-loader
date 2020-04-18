@@ -41,7 +41,10 @@ module.exports = {
               }
             }
           }
-        ]
+        ],
+        // "type" option only for Webpack >= 4
+        // (https://webpack.js.org/configuration/module/#ruletype)
+        type: "javascript/auto"
       }
     ]
   }
