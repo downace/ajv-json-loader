@@ -1,8 +1,8 @@
-const path = require('path');
-const webpack = require('webpack');
-const MemoryFs = require('memory-fs');
+import path from 'path';
+import webpack from 'webpack';
+import MemoryFs from 'memory-fs';
 
-module.exports = (fixture, options = {}) => {
+export default function compile(fixture: string, options = {}) {
     const compiler = webpack({
         context: __dirname,
         entry: `./fixtures/${fixture}`,
@@ -14,7 +14,7 @@ module.exports = (fixture, options = {}) => {
             rules: [{
                 test: /\.json$/,
                 use: {
-                    loader: path.resolve(__dirname, '../index.js'),
+                    loader: path.resolve(__dirname, '../dist/index.js'),
                     options: options,
                 }
             }]

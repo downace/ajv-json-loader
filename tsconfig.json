@@ -1,0 +1,18 @@
+{
+  "extends": "@cutting/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "rootDir": "src",
+    "outDir": "dist",
+    "target": "ES5",
+    "module": "CommonJS",
+    "useUnknownInCatchVariables": false,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

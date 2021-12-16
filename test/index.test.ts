@@ -1,15 +1,21 @@
-const chai     = require('chai');
+import {describe, before} from 'mocha'
+import chai     from 'chai';
+import compiler from './compiler';
+import 'chai-string';
+import { Stats } from 'webpack';
+
+export {};
+
 const expect   = chai.expect;
-const compiler = require('./compiler');
 
 chai.use(require('chai-string'));
 
 describe('ajv-json-loader', () => {
 
-    let stats;
+    let stats: Stats.ToJsonOutput;
 
-    function compile(fixture, done) {
-        compiler(fixture).then(s => {
+    function compile(fixture: string, done: () => void) {
+        compiler(fixture).then((s: any) => {
             stats = s.toJson();
             done();
         });
@@ -45,16 +51,17 @@ describe('ajv-json-loader', () => {
 
     });
 
-    context('simple schema', () => {
+    context.only('simple schema', () => {
 
         before(done => {
             compile('simple.json', done);
         });
 
-        it('should emit correct module code for simple schema', () => {
+        it.only('should emit correct module code for simple schema', () => {
+            console.dir({stats}, {depth: 333})
 
             expect(stats.errors).to.be.empty;
-            const output = stats.modules[ 0 ].source;
+            const output = stats?.modules?.[ 0 ]?.source;
 
             // region const simpleSchemaCode = `...`;
             const simpleSchemaCode = `'use strict';
@@ -87,6 +94,7 @@ describe('ajv-json-loader', () => {
                 validate.errors = null;
                 module.exports = validate;`;
             // endregion
+            console.dir({output})
             expect(output).to.equalIgnoreSpaces(simpleSchemaCode);
 
         });
@@ -117,7 +125,7 @@ describe('ajv-json-loader', () => {
         it('should emit correct module code for schema with external references', () => {
 
             expect(stats.errors).to.be.empty;
-            const output = stats.modules[ 0 ].source;
+            const output = stats?.modules?.[ 0 ]?.source;
 
             // region const complexSchemaCode = `...`;
             const complexSchemaCode = `'use strict';

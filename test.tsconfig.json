@@ -1,0 +1,4 @@
+{
+  "extends": "@cutting/tsconfig/tsconfig.test.json",
+  "include": ["test/**/*.ts"]
+}
