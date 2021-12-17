@@ -1,134 +1,125 @@
-import {describe, before} from 'mocha'
-import chai     from 'chai';
+import { describe, before } from 'mocha';
+import chai from 'chai';
 import compiler from './compiler';
 import 'chai-string';
 import { Stats } from 'webpack';
+import chaiString from 'chai-string';
 
-export {};
+const expect = chai.expect;
 
-const expect   = chai.expect;
-
-chai.use(require('chai-string'));
+chai.use(chaiString);
 
 describe('ajv-json-loader', () => {
+  let stats: Stats.ToJsonOutput;
 
-    let stats: Stats.ToJsonOutput;
+  function compile(fixture: string, done: () => void) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    compiler(fixture).then((s: any) => {
+      stats = s.toJson();
+      done();
+    });
+  }
 
-    function compile(fixture: string, done: () => void) {
-        compiler(fixture).then((s: any) => {
-            stats = s.toJson();
-            done();
-        });
-    }
-
-    context('invalid JSON', () => {
-
-        before(done => {
-            compile('invalid-json.json', done);
-        });
-
-        it('should error if schema is not a valid JSON', () => {
-
-            expect(stats.errors).to.have.lengthOf(1);
-            expect(stats.errors[ 0 ]).to.contain('Schema is not a valid JSON: Unexpected end of JSON input');
-
-        });
-
+  context('invalid JSON', () => {
+    before((done) => {
+      compile('invalid-json.json', done);
     });
 
-    context('invalid schema', () => {
+    it('should error if schema is not a valid JSON', () => {
+      expect(stats.errors).to.have.lengthOf(1);
+      expect(stats.errors[0]).to.contain('Schema is not a valid JSON: Unexpected end of JSON input');
+    });
+  });
 
-        before(done => {
-            compile('invalid.json', done);
-        });
-
-        it('should error if schema is not a valid JSON-schema', () => {
-
-            expect(stats.errors).to.have.lengthOf(1);
-            expect(stats.errors[ 0 ]).to.contain('schema is invalid: data.properties should be object');
-
-        });
-
+  context('invalid schema', () => {
+    before((done) => {
+      compile('invalid.json', done);
     });
 
-    context.only('simple schema', () => {
+    it('should error if schema is not a valid JSON-schema', () => {
+      expect(stats.errors).to.have.lengthOf(1);
+      expect(stats.errors[0]).to.contain('schema is invalid: data/properties must be object');
+    });
+  });
 
-        before(done => {
-            compile('simple.json', done);
-        });
-
-        it.only('should emit correct module code for simple schema', () => {
-            console.dir({stats}, {depth: 333})
-
-            expect(stats.errors).to.be.empty;
-            const output = stats?.modules?.[ 0 ]?.source;
-
-            // region const simpleSchemaCode = `...`;
-            const simpleSchemaCode = `'use strict';
-                var validate = (function() {
-                  var refVal = [];
-                  return function validate(data, dataPath, parentData, parentDataProperty, rootData) {
-                    'use strict';
-                    if ((data && typeof data === "object" && !Array.isArray(data))) {
-                      var missing0;
-                      if (((data.key === undefined) && (missing0 = '.key'))) {
-                        validate.errors = [{
-                          keyword: 'required',
-                          dataPath: (dataPath || '') + "",
-                          schemaPath: '#/required',
-                          params: {
-                            missingProperty: '' + missing0 + ''
-                          },
-                          message: 'should have required property \\'' + missing0 + '\\''
-                        }];
-                        return false;
-                      }
-                    }
-                    validate.errors = null;
-                    return true;
-                  };
-                })();
-                validate.schema = {
-                  "required": ["key"]
-                };
-                validate.errors = null;
-                module.exports = validate;`;
-            // endregion
-            console.dir({output})
-            expect(output).to.equalIgnoreSpaces(simpleSchemaCode);
-
-        });
-
+  context('simple schema', () => {
+    before((done) => {
+      compile('simple.json', done);
     });
 
-    context('schema with missing ref', () => {
+    it('should emit correct module code for simple schema', () => {
+      expect(stats.errors).to.be.empty;
+      const output = stats?.modules?.[0]?.source;
 
-        before(done => {
-            compile('missing-ref.json', done);
-        });
+      // region const simpleSchemaCode = `...`;
+      const simpleSchemaCode = `"use strict";
+          module.exports = validate10;
+          module.exports.default = validate10;
+          const schema11 = {
+            "type":"object",
+            "required":["key"]
+          };
+          function validate10(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
+            let vErrors = null;
+            let errors = 0;if(errors === 0){
+              if(data && typeof data == "object" && !Array.isArray(data)){
+                let missing0;
+                if((data.key === undefined) && (missing0 = "key")){
+                  validate10.errors = [{
+                    instancePath,
+                    schemaPath:"#/required",
+                    keyword:"required",
+                    params:{
+                      missingProperty: missing0
+                    },
+                    message:"must have required property '"+missing0+"'"
+                  }];
+                  return false;
+                }
+              } else {
+                validate10.errors = [{
+                  instancePath,
+                  schemaPath:"#/type",
+                  keyword:"type",
+                  params:{
+                    type: "object"
+                  },
+                  message:"must be object"
+                }];
+                return false;
+              }
+            }
+            validate10.errors = vErrors;
+            return errors === 0;
+          }`;
+      // endregion
+      expect(output).to.equalIgnoreSpaces(simpleSchemaCode);
+    });
+  });
 
-        it('should error if referenced schema couldn\'t be loaded', () => {
-
-            expect(stats.errors).to.have.lengthOf(1);
-            expect(stats.errors[ 0 ]).to.contain('Couldn\'t load schema: Cannot find module');
-
-        });
-
+  context('schema with missing ref', () => {
+    before((done) => {
+      compile('missing-ref.json', done);
     });
 
-    context('schema with ref', () => {
+    it("should error if referenced schema couldn't be loaded", () => {
+      expect(stats.errors).to.have.lengthOf(1);
+      expect(stats.errors[0]).to.contain("Couldn't load schema: Cannot find module");
+    });
+  });
 
-        before(done => {
-            compile('with-ref.json', done);
-        });
+  context.only('schema with ref', () => {
+    before((done) => {
+      compile('with-ref.json', done);
+    });
 
-        it('should emit correct module code for schema with external references', () => {
+    it('should emit correct module code for schema with external references', () => {
+      console.dir({ errors: stats.errors }, { depth: 333 });
+      expect(stats.errors).to.be.empty;
+      const output = stats?.modules?.[0]?.source;
 
-            expect(stats.errors).to.be.empty;
-            const output = stats?.modules?.[ 0 ]?.source;
-
-            // region const complexSchemaCode = `...`;
-            const complexSchemaCode = `'use strict';
+      // region const complexSchemaCode = `...`;
+      const complexSchemaCode = `'use strict';
                 var validate = (function() {
                   var refVal = [];
                   var refVal1 = {
@@ -180,11 +171,8 @@ describe('ajv-json-loader', () => {
                 };
                 validate.errors = null;
                 module.exports = validate;`;
-            // endregion
-            expect(output).to.equalIgnoreSpaces(complexSchemaCode);
-
-        });
-
+      // endregion
+      expect(output).to.equalIgnoreSpaces(complexSchemaCode);
     });
-
+  });
 });

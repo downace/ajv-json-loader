@@ -1,4 +1,5 @@
 {
+    "type": "object",
     "properties": {
         "key": {
             "$ref": "referenced.json#/definitions/key"

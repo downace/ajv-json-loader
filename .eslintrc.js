@@ -1,4 +1,7 @@
 module.exports = {
   root: true,
-  extends: ['cutting/eslint-config/node']
+  extends: ['@cutting/eslint-config/node'],
+  rules: {
+    'jest/valid-expect': ['off'],
+  },
 };

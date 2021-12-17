@@ -1,5 +1,5 @@
 {
-    "id": "referenced-schema.json#",
+    "$id": "referenced-schema.json#",
     "definitions": {
         "key": {
             "required": [ "prop" ]
