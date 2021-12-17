@@ -108,69 +108,65 @@ describe('ajv-json-loader', () => {
     });
   });
 
-  context.only('schema with ref', () => {
+  context('schema with ref', () => {
     before((done) => {
       compile('with-ref.json', done);
     });
 
     it('should emit correct module code for schema with external references', () => {
-      console.dir({ errors: stats.errors }, { depth: 333 });
       expect(stats.errors).to.be.empty;
       const output = stats?.modules?.[0]?.source;
 
       // region const complexSchemaCode = `...`;
-      const complexSchemaCode = `'use strict';
-                var validate = (function() {
-                  var refVal = [];
-                  var refVal1 = {
-                    "required": ["prop"]
-                  };
-                  refVal[1] = refVal1;
-                  return function validate(data, dataPath, parentData, parentDataProperty, rootData) {
-                    'use strict';
-                    var vErrors = null;
-                    var errors = 0;
-                    if ((data && typeof data === "object" && !Array.isArray(data))) {
-                      var errs__0 = errors;
-                      var valid1 = true;
-                      var data1 = data.key;
-                      if (data1 === undefined) {
-                        valid1 = true;
-                      } else {
-                        var errs_1 = errors;
-                        var errs_2 = errors;
-                        if ((data1 && typeof data1 === "object" && !Array.isArray(data1))) {
-                          var missing2;
-                          if (((data1.prop === undefined) && (missing2 = '.prop'))) {
-                            validate.errors = [{
-                              keyword: 'required',
-                              dataPath: (dataPath || '') + '.key',
-                              schemaPath: 'referenced.json#/definitions/key/required',
-                              params: {
-                                missingProperty: '' + missing2 + ''
-                              },
-                              message: 'should have required property \\'' + missing2 + '\\''
-                            }];
-                            return false;
-                          }
-                        }
-                        var valid2 = errors === errs_2;
-                        var valid1 = errors === errs_1;
+      const complexSchemaCode = `"use strict";
+        module.exports = validate11;
+        module.exports.default = validate11;
+        const schema11 = {
+          "type":"object",
+          "properties":{
+            "key":{
+              "$ref":"referenced.json#/definitions/key"
+            }
+          }
+        };
+        const schema14 = {
+          "required":["prop"]
+        };
+        function validate11(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
+          let vErrors = null;
+          let errors = 0;
+          if(errors === 0){
+            if(data && typeof data == "object" && !Array.isArray(data)){
+              if(data.key !== undefined){
+                let data0 = data.key;
+                if(data0 && typeof data0 == "object" && !Array.isArray(data0)){
+                  let missing0;
+                  if((data0.prop === undefined) && (missing0 = "prop")){
+                    validate11.errors = [{
+                      instancePath:instancePath+"/key",
+                      schemaPath:"referenced.json#/definitions/key/required",
+                      keyword:"required",
+                      params:{
+                        missingProperty: missing0},
+                        message:"must have required property '"+missing0+"'"}];
+                        return false;
                       }
                     }
-                    validate.errors = vErrors;
-                    return errors === 0;
-                  };
-                })();
-                validate.schema = {
-                  "properties": {
-                    "key": {
-                      "$ref": "referenced.json#/definitions/key"
-                    }
                   }
-                };
-                validate.errors = null;
-                module.exports = validate;`;
+                } else {
+                  validate11.errors = [{
+                    instancePath,
+                    schemaPath:"#/type",keyword:"type",
+                    params:{
+                      type: "object"
+                    },
+                    message:"must be object"
+                  }];
+                  return false;
+                }
+              }
+              validate11.errors = vErrors;return errors === 0;
+            }`;
       // endregion
       expect(output).to.equalIgnoreSpaces(complexSchemaCode);
     });
